@@ -1,3 +1,12 @@
+---
+title: incident-response-env
+emoji: 🚨
+colorFrom: red
+colorTo: orange
+sdk: docker
+pinned: false
+---
+
 # IncidentResponseEnv
 
 A Gymnasium-compatible reinforcement learning environment in which an agent acts as an on-call engineer diagnosing and resolving simulated system outages.
