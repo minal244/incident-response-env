@@ -1,0 +1,81 @@
+name: incident-response-env
+version: "1.0.0"
+description: >
+  An RL environment in which an agent acts as an on-call engineer diagnosing
+  and resolving simulated system outages. The agent must gather information,
+  identify the root cause, apply the correct remediation, and resolve the
+  incident — under a step budget and with only partial observability.
+
+author: minal046
+tags:
+  - openenv
+  - reinforcement-learning
+  - incident-response
+  - partial-observability
+
+action_space:
+  type: Discrete
+  n: 6
+  labels:
+    - check_logs
+    - restart_service
+    - restart_database
+    - scale_resources
+    - ignore
+    - resolve
+
+observation_space:
+  type: Dict
+  fields:
+    metrics:
+      type: Box
+      low: [0.0, 0.0, 0.0]
+      high: [100.0, 100.0, 2000.0]
+      dtype: float32
+      description: "[cpu_usage (%), memory_usage (%), latency (ms)]"
+    step_count:
+      type: Discrete
+      n: 21
+      description: Current step index in the episode
+
+tasks:
+  - id: easy
+    name: "Incident Response — Easy"
+    description: Clean logs, clear signals. Minimal noise.
+    difficulty: easy
+    max_steps: 20
+    success_threshold: 0.5
+
+  - id: medium
+    name: "Incident Response — Medium"
+    description: One noise log entry appended. Moderate difficulty.
+    difficulty: medium
+    max_steps: 20
+    success_threshold: 0.5
+
+  - id: hard
+    name: "Incident Response — Hard"
+    description: Two noise entries added, logs shuffled. Hardest partial observability.
+    difficulty: hard
+    max_steps: 20
+    success_threshold: 0.5
+
+graders:
+  - id: correctness
+    file: graders/correctness_grader.py
+    description: >
+      Programmatic grader. Scores whether the agent checked logs,
+      applied the correct fix, and called resolve in the right order.
+    score_range: [0.0, 1.0]
+
+  - id: efficiency
+    file: graders/efficiency_grader.py
+    description: >
+      Efficiency grader. Penalizes extra steps above the 3-step optimum.
+    score_range: [0.0, 1.0]
+
+endpoints:
+  reset: POST /reset
+  step: POST /step
+  state: GET /state
+  health: GET /health

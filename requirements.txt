@@ -9,3 +9,5 @@ Pygments==2.20.0
 pytest==9.0.3
 typing_extensions==4.15.0
 openai>=1.0.0
+fastapi>=0.110.0
+uvicorn>=0.29.0

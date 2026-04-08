@@ -8,3 +8,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 ENV PYTHONPATH=/app
+ENV PORT=7860
+
+EXPOSE 7860
+
+CMD ["python", "server.py"]
