@@ -18,6 +18,7 @@ from typing import Any, Dict, Optional
 import numpy as np
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
 from env.incident_env import IncidentResponseEnv
@@ -63,10 +64,25 @@ def _serialize_info(info: Dict) -> Dict:
     }
 
 
-# ---------------------------------------------------------------------------
-# Routes
-# ---------------------------------------------------------------------------
 @app.get("/")
+def root():
+    return HTMLResponse("""
+    <html>
+    <head><title>IncidentResponseEnv</title></head>
+    <body>
+    <h1>Incident Response Environment</h1>
+    <p>This is an OpenEnv-compatible API for incident response simulation.</p>
+    <p>Endpoints:</p>
+    <ul>
+    <li>GET /health - Health check</li>
+    <li>POST /reset - Reset environment</li>
+    <li>POST /step - Take action</li>
+    <li>GET /state - Get current state</li>
+    </ul>
+    </body>
+    </html>
+    """)
+
 @app.get("/health")
 def health():
     return {"status": "ok", "env": "incident-response-env"}
